@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +30,6 @@ import io.vertx.mutiny.ext.web.client.HttpResponse;
 import io.vertx.mutiny.ext.web.client.WebClient;
 import io.vertx.mutiny.ext.web.client.predicate.ResponsePredicate;
 import io.vertx.mutiny.pgclient.PgPool;
-import io.vertx.mutiny.sqlclient.RowSet;
 import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.sqlclient.PoolOptions;
 
@@ -45,7 +43,6 @@ public class PostgresPoolIT {
     private static PgPool postgresql;
     private final static String DB_USER_NAME = "test";
     private final static String DB_USER_PWD = "test";
-    private final static long IDLE = 10;
     private final static int TEST_DB_POOL_SIZE = 1;
 
     /*
@@ -147,10 +144,12 @@ public class PostgresPoolIT {
         assertEquals(doneIdleExpired.getCount(), 0, "Missing doneIdleExpired query.");
     }
 
+    private Uni<Long> activeConnections() {
+        return makeHttpReqAsLong(httpClient, "/pool/connections", HttpStatus.SC_OK);
+    }
+
     private Uni<Long> selectActiveConnectionsAfterConnection() {
-        return postgresql.preparedQuery("SELECT CURRENT_TIMESTAMP").execute()
-                .onItem().delayIt().by(Duration.ofSeconds(IDLE + 1))
-                .onItem().transformToUni(resp -> activeConnections());
+        return makeHttpReqAsLong(httpClient, "/pool/connect", HttpStatus.SC_OK);
     }
 
     private Uni<Long> makeHttpReqAsLong(WebClient httpClient, String path, int expectedStatus) {
@@ -175,13 +174,13 @@ public class PostgresPoolIT {
         return active <= DATASOURCE_MAX_SIZE + (7); // TODO: double check this condition ... this magical number is scary!.
     }
 
-    private Uni<Long> activeConnections() {
-        return postgresql.query(
-                "SELECT count(*) as active_con FROM pg_stat_activity where application_name like '%vertx%'")
-                .execute()
-                .onItem().transform(RowSet::iterator).onItem()
-                .transform(iterator -> iterator.hasNext() ? iterator.next().getLong("active_con") : null);
-    }
+    //    private Uni<Long> activeConnections() {
+    //        return postgresql.query(
+    //                "SELECT count(*) as active_con FROM pg_stat_activity where application_name like '%vertx%'")
+    //                .execute()
+    //                .onItem().transform(RowSet::iterator).onItem()
+    //                .transform(iterator -> iterator.hasNext() ? iterator.next().getLong("active_con") : null);
+    //    }
 
     private static PgPool getTestPgPool() {
         PoolOptions options = new PoolOptions();
