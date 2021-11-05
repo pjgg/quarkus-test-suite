@@ -26,6 +26,18 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-fault-tolerance</artifactId>
+            <version>2.2.3.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.smallrye</groupId>
+                    <artifactId>smallrye-fault-tolerance</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.smallrye</groupId>
+            <artifactId>smallrye-fault-tolerance</artifactId>
+            <version>5.2.1</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
