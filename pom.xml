@@ -493,6 +493,7 @@
                 <module>sql-db/vertx-sql</module>
                 <module>sql-db/hibernate-reactive</module>
                 <module>sql-db/reactive-vanilla</module>
+                <module>sql-db/hibernate-fulltext-search</module>
             </modules>
         </profile>
         <profile>
