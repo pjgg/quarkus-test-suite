@@ -31,7 +31,7 @@ public abstract class BaseRedirectHttpsSecurityIT {
     @Test
     public void https() throws IOException, GeneralSecurityException {
         SSLContext sslContext = SSLContexts.custom()
-                .setKeyStoreType(Certificates.PKCS12)
+                .setKeyStoreType(Certificates.JKS)
                 .loadTrustMaterial(new File(Certificates.CLIENT_TRUSTSTORE), CLIENT_PASSWORD)
                 .build();
         try (CloseableHttpClient httpClient = HttpClients.custom()

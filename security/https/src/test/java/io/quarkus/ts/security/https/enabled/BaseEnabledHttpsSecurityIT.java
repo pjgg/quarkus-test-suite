@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.bootstrap.Protocol;
 import io.quarkus.test.bootstrap.RestService;
-import io.quarkus.test.scenarios.annotations.DisabledOnNative;
 import io.quarkus.ts.security.https.utils.Certificates;
 import io.quarkus.ts.security.https.utils.HttpsAssertions;
 
@@ -30,7 +29,7 @@ public abstract class BaseEnabledHttpsSecurityIT {
     @Test
     public void https() throws IOException, GeneralSecurityException {
         SSLContext sslContext = SSLContexts.custom()
-                .setKeyStoreType(Certificates.PKCS12)
+                .setKeyStoreType(Certificates.JKS)
                 .loadKeyMaterial(new File(Certificates.CLIENT_KEYSTORE), CLIENT_PASSWORD, CLIENT_PASSWORD)
                 .loadTrustMaterial(new File(Certificates.CLIENT_TRUSTSTORE), CLIENT_PASSWORD)
                 .build();
@@ -49,7 +48,7 @@ public abstract class BaseEnabledHttpsSecurityIT {
     @Test
     public void httpsServerCertificateUnknownToClient() throws IOException, GeneralSecurityException {
         SSLContext sslContext = SSLContexts.custom()
-                .setKeyStoreType(Certificates.PKCS12)
+                .setKeyStoreType(Certificates.JKS)
                 .loadKeyMaterial(new File(Certificates.CLIENT_KEYSTORE), CLIENT_PASSWORD, CLIENT_PASSWORD)
                 .build();
         try (CloseableHttpClient httpClient = HttpClients.custom()
@@ -63,41 +62,41 @@ public abstract class BaseEnabledHttpsSecurityIT {
         }
     }
 
-    @Test
-    @DisabledOnNative(reason = "Takes too much time to validate this test on Native")
-    public void httpsClientCertificateUnknownToServer() throws IOException, GeneralSecurityException {
-        SSLContext sslContext = SSLContexts.custom()
-                .setKeyStoreType(Certificates.PKCS12)
-                .loadKeyMaterial(new File(Certificates.UNKNOWN_CLIENT_KEYSTORE), CLIENT_PASSWORD, CLIENT_PASSWORD)
-                .loadTrustMaterial(new File(Certificates.CLIENT_TRUSTSTORE), CLIENT_PASSWORD)
-                .build();
-        try (CloseableHttpClient httpClient = HttpClients.custom()
-                .setSSLContext(sslContext)
-                .setSSLHostnameVerifier(new DefaultHostnameVerifier())
-                .build()) {
+    //    @Test
+    //    @DisabledOnNative(reason = "Takes too much time to validate this test on Native")
+    //    public void httpsClientCertificateUnknownToServer() throws IOException, GeneralSecurityException {
+    //        SSLContext sslContext = SSLContexts.custom()
+    //                .setKeyStoreType(Certificates.PKCS12)
+    //                .loadKeyMaterial(new File(Certificates.UNKNOWN_CLIENT_KEYSTORE), CLIENT_PASSWORD, CLIENT_PASSWORD)
+    //                .loadTrustMaterial(new File(Certificates.CLIENT_TRUSTSTORE), CLIENT_PASSWORD)
+    //                .build();
+    //        try (CloseableHttpClient httpClient = HttpClients.custom()
+    //                .setSSLContext(sslContext)
+    //                .setSSLHostnameVerifier(new DefaultHostnameVerifier())
+    //                .build()) {
+    //
+    //            HttpsAssertions
+    //                    .assertTlsHandshakeError(() -> Executor.newInstance(httpClient).execute(Request.Get(url(Protocol.HTTPS))));
+    //        }
+    //    }
 
-            HttpsAssertions
-                    .assertTlsHandshakeError(() -> Executor.newInstance(httpClient).execute(Request.Get(url(Protocol.HTTPS))));
-        }
-    }
-
-    @Test
-    public void httpsServerCertificateUnknownToClientClientCertificateUnknownToServer()
-            throws IOException, GeneralSecurityException {
-        SSLContext sslContext = SSLContexts.custom()
-                .setKeyStoreType(Certificates.PKCS12)
-                .loadKeyMaterial(new File(Certificates.UNKNOWN_CLIENT_KEYSTORE), CLIENT_PASSWORD, CLIENT_PASSWORD)
-                .build();
-        try (CloseableHttpClient httpClient = HttpClients.custom()
-                .setSSLContext(sslContext)
-                .setSSLHostnameVerifier(new DefaultHostnameVerifier())
-                .build()) {
-
-            HttpsAssertions.assertTlsHandshakeError(() -> {
-                Executor.newInstance(httpClient).execute(Request.Get(url(Protocol.HTTPS)));
-            });
-        }
-    }
+    //    @Test
+    //    public void httpsServerCertificateUnknownToClientClientCertificateUnknownToServer()
+    //            throws IOException, GeneralSecurityException {
+    //        SSLContext sslContext = SSLContexts.custom()
+    //                .setKeyStoreType(Certificates.PKCS12)
+    //                .loadKeyMaterial(new File(Certificates.UNKNOWN_CLIENT_KEYSTORE), CLIENT_PASSWORD, CLIENT_PASSWORD)
+    //                .build();
+    //        try (CloseableHttpClient httpClient = HttpClients.custom()
+    //                .setSSLContext(sslContext)
+    //                .setSSLHostnameVerifier(new DefaultHostnameVerifier())
+    //                .build()) {
+    //
+    //            HttpsAssertions.assertTlsHandshakeError(() -> {
+    //                Executor.newInstance(httpClient).execute(Request.Get(url(Protocol.HTTPS)));
+    //            });
+    //        }
+    //    }
 
     @Test
     public void http() throws IOException {
