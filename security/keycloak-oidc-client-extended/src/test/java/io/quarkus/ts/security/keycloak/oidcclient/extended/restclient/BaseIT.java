@@ -17,7 +17,8 @@ public abstract class BaseIT {
     static final String CLIENT_SECRET_DEFAULT = "test-application-client-secret";
 
     @Container(image = "${keycloak.image}", expectedLog = "Http management interface listening", port = KEYCLOAK_PORT)
-    static KeycloakService keycloak = new KeycloakService("/keycloak-realm.json", REALM_DEFAULT);
+    static KeycloakService keycloak = new KeycloakService("/keycloak-realm.json", REALM_DEFAULT)
+            .withProperty("JAVA_OPTS", "-Dcom.redhat.fips=false");
 
     @QuarkusApplication
     static RestService app = new RestService()

@@ -56,7 +56,8 @@ public class HttpAdvancedReactiveIT {
     private static final int ASSERT_TIMEOUT_SECONDS = 10;
 
     @Container(image = "${keycloak.image}", expectedLog = "Admin console listening", port = KEYCLOAK_PORT)
-    static KeycloakService keycloak = new KeycloakService("/keycloak-realm.json", REALM_DEFAULT);
+    static KeycloakService keycloak = new KeycloakService("/keycloak-realm.json", REALM_DEFAULT)
+            .withProperty("JAVA_OPTS", "-Dcom.redhat.fips=false");
 
     @QuarkusApplication(ssl = true)
     static RestService app = new RestService().withProperty("quarkus.oidc.auth-server-url",

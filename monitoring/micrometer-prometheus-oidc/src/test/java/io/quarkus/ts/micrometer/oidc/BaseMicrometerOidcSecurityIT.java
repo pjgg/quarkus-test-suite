@@ -30,7 +30,8 @@ public abstract class BaseMicrometerOidcSecurityIT {
     static final int KEYCLOAK_PORT = 8080;
 
     @Container(image = "${keycloak.image}", expectedLog = "Http management interface listening", port = KEYCLOAK_PORT)
-    static KeycloakService keycloak = new KeycloakService("/keycloak-realm.json", REALM_DEFAULT);
+    static KeycloakService keycloak = new KeycloakService("/keycloak-realm.json", REALM_DEFAULT)
+            .withProperty("JAVA_OPTS", "-Dcom.redhat.fips=false");
 
     private AuthzClient authzClient;
 
