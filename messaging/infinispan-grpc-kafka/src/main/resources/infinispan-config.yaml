@@ -3,6 +3,6 @@ jgroups:
   encrypt: true
 keystore:
   path: /server.jks
-  password: changeit
-  type: jks
+  password: password
+  type: BCFKS
   alias: 1

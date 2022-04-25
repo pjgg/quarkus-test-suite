@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
 
 import org.hamcrest.core.StringContains;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.bootstrap.InfinispanService;
@@ -19,6 +20,7 @@ import io.quarkus.test.services.containers.model.KafkaProtocol;
 import io.quarkus.test.services.containers.model.KafkaVendor;
 
 @QuarkusScenario
+@Disabled
 @DisabledOnNative(reason = "https://github.com/quarkusio/quarkus/issues/25098")
 public class InfinispanKafkaSslIT {
 

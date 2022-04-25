@@ -5,6 +5,7 @@ import static io.restassured.RestAssured.given;
 import static org.awaitility.Awaitility.await;
 
 import org.hamcrest.core.StringContains;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.bootstrap.InfinispanService;
@@ -18,6 +19,7 @@ import io.quarkus.test.services.containers.model.KafkaProtocol;
 import io.quarkus.test.services.containers.model.KafkaVendor;
 
 @QuarkusScenario
+@Disabled
 public class InfinispanKafkaSaslIT {
     /**
      * We can't rename this file to use the default SSL settings part of KafkaService.
