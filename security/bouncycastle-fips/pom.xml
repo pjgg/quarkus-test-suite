@@ -23,5 +23,10 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bc-fips</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.smallrye.reactive</groupId>
+            <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
