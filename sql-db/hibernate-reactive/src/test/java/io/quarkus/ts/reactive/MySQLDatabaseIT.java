@@ -27,7 +27,7 @@ public class MySQLDatabaseIT extends AbstractReactiveDatabaseIT {
             .withProperty("quarkus.datasource.username", MYSQL_USER)
             .withProperty("quarkus.datasource.password", MYSQL_PASSWORD)
             .withProperty("quarkus.datasource.reactive.url",
-                    () -> database.getReactiveUrl() + "?verifyServerCertificate=false&useSSL=true&requireSSL=true");
+                    () -> database.getReactiveUrl() + "?verifyServerCertificate=false&useSSL=false&requireSSL=false");
 
     @Override
     protected RestService getApp() {
