@@ -12,6 +12,10 @@
     <name>Quarkus QE TS: SQL Database: Hibernate Reactive</name>
     <dependencies>
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bctls-fips</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-reactive</artifactId>
         </dependency>
