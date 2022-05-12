@@ -9,46 +9,44 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Security;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
 
 import io.quarkus.runtime.util.ClassPathUtils;
-import io.quarkus.test.bootstrap.Protocol;
-import io.quarkus.test.bootstrap.RestService;
-import io.quarkus.test.scenarios.QuarkusScenario;
-import io.quarkus.test.services.Dependency;
-import io.quarkus.test.services.QuarkusApplication;
+import io.quarkus.test.junit.QuarkusTest;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.net.KeyStoreOptions;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.ext.web.client.WebClient;
 
-@QuarkusScenario
+@QuarkusTest
 // TODO https://github.com/quarkusio/quarkus/issues/25516
-@DisabledOnJre(value = JRE.JAVA_17)
-public class BouncyCastleFipsJsseIT {
+//@DisabledOnJre(value = JRE.JAVA_17)
+public class BouncyCastleFipsJsseTest {
 
     private static final String PASSWORD = "password";
     private static final String BCFIPS = BouncyCastleFipsProvider.PROVIDER_NAME;
     private static final String BCJSSE = "BCJSSE";
     private static final String KS_TYPE = "BCFKS";
 
-    @QuarkusApplication(ssl = true, dependencies = {
-            @Dependency(groupId = "org.bouncycastle", artifactId = "bctls-fips", version = "${bouncycastle.bctls-fips.version}")
-    })
-    private static final RestService app = new RestService().withProperties("jsse.properties");
+    @Inject
+    Vertx vertx;
+
+    //    @QuarkusApplication(ssl = true, dependencies = {
+    //            @Dependency(groupId = "org.bouncycastle", artifactId = "bctls-fips", version = "${bouncycastle.bctls-fips.version}")
+    //    })
+    //    private static final RestService app = new RestService().withProperties("jsse.properties");
 
     @Test
     public void verifyBouncyCastleFipsAndJsseProviderAvailability() throws Exception {
-        Security.insertProviderAt(new BouncyCastleFipsProvider(), 1);
-        WebClient webClient = WebClient.create(new io.vertx.mutiny.core.Vertx(Vertx.vertx()), createWebClientOptions());
-        String endpoint = app.getHost(Protocol.HTTPS) + ":" + app.getPort(Protocol.HTTPS) + "/api/listProviders";
+        //Security.insertProviderAt(new BouncyCastleFipsProvider(), 1);
+        WebClient webClient = WebClient.create(new io.vertx.mutiny.core.Vertx(vertx), createWebClientOptions());
+        String endpoint = "https://localhost:8444/api/listProviders";
         String body = webClient
                 .getAbs(endpoint)
                 .sendAndAwait().bodyAsString();
