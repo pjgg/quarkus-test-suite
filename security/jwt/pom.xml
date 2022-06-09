@@ -22,6 +22,7 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt-build</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
