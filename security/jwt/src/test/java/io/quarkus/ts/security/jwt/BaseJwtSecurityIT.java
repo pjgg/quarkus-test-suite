@@ -11,6 +11,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
@@ -289,7 +290,7 @@ public abstract class BaseJwtSecurityIT {
 
     protected abstract RequestSpecification givenWithToken(String token);
 
-    private static RSAPrivateKey loadPrivateKey() throws Exception {
+    private static PrivateKey loadPrivateKey() throws Exception {
         String key = new String(Files.readAllBytes(Paths.get("target/test-classes/private-key.pem")), Charset.defaultCharset());
 
         String privateKeyPEM = key
@@ -299,20 +300,25 @@ public abstract class BaseJwtSecurityIT {
 
         byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
+
+        for(int i =0; i< Security.getProviders().length; i++) {
+            System.out.println("Provider " + i + " " + Security.getProviders()[i].getName());
+        }
+
         System.out.println("Eco 1");
-        Provider provider = Security.getProvider("SunPKCS11");
+
+        Provider provider = Security.getProvider("SunPKCS11-NSS-FIPS");
         KeyStore ks = KeyStore.getInstance("PKCS11", provider);
+
         ks.load(null, "password".toCharArray());
+
         System.out.println("Eco 2");
         Iterator<String> alias = ks.aliases().asIterator();
         while (alias.hasNext()) {
             System.out.println("Alias " + alias.next());
         }
 
-        return (RSAPrivateKey) ks.getKey("selfsigned", "password".toCharArray());
-//        KeyFactory keyFactory = KeyFactory.getInstance("PKCS11", "SunPKCS11");
-//        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-//        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+        return (PrivateKey) ks.getKey("selfsigned", "password".toCharArray());
     }
 
     private enum Invalidity {
@@ -343,11 +349,11 @@ public abstract class BaseJwtSecurityIT {
             expiration = new Date(now.getTime() - TimeUnit.DAYS.toMillis(TEN));
         }
 
-        RSAPrivateKey privateKey = loadPrivateKey();
+        PrivateKey privateKey = loadPrivateKey();
         if (invalidity == Invalidity.WRONG_KEY) {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            privateKey = (RSAPrivateKey) keyPair.getPrivate();
+            privateKey = keyPair.getPrivate();
         }
 
         return Jwt.issuer(issuer)
