@@ -301,7 +301,7 @@ public abstract class BaseJwtSecurityIT {
         ks.load(null, "changeit".toCharArray());
         System.out.println("Eco 2");
 
-        KeyFactory keyFactory = KeyFactory.getInstance("PKCS11");
+        KeyFactory keyFactory = KeyFactory.getInstance("PKCS11", "SunPKCS11");
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
         return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
     }
