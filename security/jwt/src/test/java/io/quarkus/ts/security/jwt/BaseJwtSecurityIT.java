@@ -11,10 +11,12 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -298,12 +300,17 @@ public abstract class BaseJwtSecurityIT {
 
         System.out.println("Eco 1");
         KeyStore ks = KeyStore.getInstance("PKCS11");
-        ks.load(null, "changeit".toCharArray());
+        ks.load(null, "password".toCharArray());
         System.out.println("Eco 2");
-
-        KeyFactory keyFactory = KeyFactory.getInstance("PKCS11", "SunPKCS11");
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
+        Iterator<String> alias = ks.aliases().asIterator();
+        while (alias.hasNext()) {
+            System.out.println("Alias " + alias.next());
+        }
+return null;
+//        return (RSAPrivateKey) ks.getKey(alias, "password".toCharArray());
+//        KeyFactory keyFactory = KeyFactory.getInstance("PKCS11", "SunPKCS11");
+//        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+//        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
     }
 
     private enum Invalidity {
