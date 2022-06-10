@@ -11,6 +11,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -299,15 +300,16 @@ public abstract class BaseJwtSecurityIT {
         byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
         System.out.println("Eco 1");
-        KeyStore ks = KeyStore.getInstance("PKCS11");
+        Provider provider = Security.getProvider("SunPKCS11");
+        KeyStore ks = KeyStore.getInstance("PKCS11", provider);
         ks.load(null, "password".toCharArray());
         System.out.println("Eco 2");
         Iterator<String> alias = ks.aliases().asIterator();
         while (alias.hasNext()) {
             System.out.println("Alias " + alias.next());
         }
-return null;
-//        return (RSAPrivateKey) ks.getKey(alias, "password".toCharArray());
+
+        return (RSAPrivateKey) ks.getKey("selfsigned", "password".toCharArray());
 //        KeyFactory keyFactory = KeyFactory.getInstance("PKCS11", "SunPKCS11");
 //        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
 //        return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
