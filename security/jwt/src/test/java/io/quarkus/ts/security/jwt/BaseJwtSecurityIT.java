@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -13,6 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -23,7 +26,6 @@ import java.util.function.Supplier;
 import org.apache.http.HttpStatus;
 import org.jose4j.base64url.internal.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
-import org.openjsse.sun.security.rsa.RSAPrivateKeyImpl;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -288,7 +290,7 @@ public abstract class BaseJwtSecurityIT {
 
     protected abstract RequestSpecification givenWithToken(String token);
 
-    private static RSAPrivateKeyImpl loadPrivateKey() throws Exception {
+    private static PrivateKey loadPrivateKey() throws Exception {
         String key = new String(Files.readAllBytes(Paths.get("target/test-classes/private-key.pem")), Charset.defaultCharset());
 
         String privateKeyPEM = key
@@ -316,7 +318,7 @@ public abstract class BaseJwtSecurityIT {
             System.out.println("Alias " + alias.next());
         }
 
-        return (RSAPrivateKeyImpl) ks.getKey("selfsigned", "password".toCharArray());
+        return (PrivateKey) ks.getKey("selfsigned", "password".toCharArray());
     }
 
     private enum Invalidity {
@@ -347,11 +349,11 @@ public abstract class BaseJwtSecurityIT {
             expiration = new Date(now.getTime() - TimeUnit.DAYS.toMillis(TEN));
         }
 
-        RSAPrivateKeyImpl privateKey = loadPrivateKey();
+        PrivateKey privateKey = loadPrivateKey();
         if (invalidity == Invalidity.WRONG_KEY) {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            privateKey = (RSAPrivateKeyImpl)keyPair.getPrivate();
+            privateKey = keyPair.getPrivate();
         }
 
         return Jwt.issuer(issuer)
