@@ -12,6 +12,12 @@
     <name>Quarkus QE TS: Security: JWT</name>
     <dependencies>
         <dependency>
+            <groupId>org.openjsse</groupId>
+            <artifactId>openjsse</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy</artifactId>
         </dependency>
