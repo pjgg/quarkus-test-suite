@@ -316,6 +316,9 @@ public abstract class BaseJwtSecurityIT {
         System.out.println("Eco 2*");
         if(ks == null) {
             System.out.println("keystore is null");
+        } else {
+            System.out.println("KS is not null");
+            System.out.println("Provider selected Name " + ks.getProvider().getName());
         }
 
         if(Objects.nonNull(ks.aliases())) {
