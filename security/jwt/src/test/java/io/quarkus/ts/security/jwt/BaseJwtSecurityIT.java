@@ -310,7 +310,7 @@ public abstract class BaseJwtSecurityIT {
 
         ks.load(null, "password".toCharArray());
 
-        System.out.println("Eco 2*");
+        System.out.println("Eco 2");
         if (ks == null) {
             System.out.println("keystore is null");
         } else {
