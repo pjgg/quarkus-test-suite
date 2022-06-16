@@ -19,6 +19,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -313,10 +314,15 @@ public abstract class BaseJwtSecurityIT {
         ks.load(null, "password".toCharArray());
 
         System.out.println("Eco 2");
-        Iterator<String> alias = ks.aliases().asIterator();
-        while (alias.hasNext()) {
-            System.out.println("Alias " + alias.next());
+        if(Objects.nonNull(ks.aliases())) {
+            Iterator<String> alias = ks.aliases().asIterator();
+            while (alias.hasNext()) {
+                System.out.println("Alias " + alias.next());
+            }
+        } else {
+            System.out.println("alias null");
         }
+
 
         return (PrivateKey) ks.getKey("selfsigned", "password".toCharArray());
     }
