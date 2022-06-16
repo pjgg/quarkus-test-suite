@@ -308,7 +308,7 @@ public abstract class BaseJwtSecurityIT {
         Provider provider = Security.getProvider("SunPKCS11-NSS-FIPS");
         KeyStore ks = KeyStore.getInstance("PKCS11", provider);
 
-        ks.load(null, "password".toCharArray());
+        ks.load(null, "admin1jboss!".toCharArray());
 
         System.out.println("Eco 2");
         if (ks == null) {
@@ -321,7 +321,7 @@ public abstract class BaseJwtSecurityIT {
             System.out.println(" - " + e.nextElement());
         }
 
-        PrivateKey tmp = (PrivateKey) ks.getKey("selfsigned", "password".toCharArray());
+        PrivateKey tmp = (PrivateKey) ks.getKey("selfsigned", "admin1jboss!".toCharArray());
         System.out.println("private key is null: " + Objects.isNull(tmp));
         System.out.println("private Alg: " + tmp.getAlgorithm());
         System.out.println("private key Format: " + tmp.getFormat());
