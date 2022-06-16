@@ -321,7 +321,7 @@ public abstract class BaseJwtSecurityIT {
         for (Enumeration<String> e = ks.aliases(); e.hasMoreElements(); ) {
             System.out.println(" - " + e.nextElement());
         }
-        PrivateKey tmp = (PrivateKey) ks.getKey("pablo-test-certificate", "password".toCharArray());
+        PrivateKey tmp = (PrivateKey) ks.getKey(null, "password".toCharArray());
         System.out.println("private key is null: " + Objects.isNull(tmp));
         System.out.println("private Alg: " + tmp.getAlgorithm());
         System.out.println("private key Format: " + tmp.getFormat());
