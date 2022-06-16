@@ -306,13 +306,7 @@ public abstract class BaseJwtSecurityIT {
         System.out.println("Eco 1");
 
         Provider provider = Security.getProvider("SunPKCS11-NSS-FIPS");
-        System.out.println("provider keys: ");
-        for (Enumeration<Object> e = provider.keys(); e.hasMoreElements(); ) {
-            System.out.println(" - " + e.nextElement());
-        }
-
         KeyStore ks = KeyStore.getInstance("PKCS11", provider);
-
         ks.load(null, "admin1jboss!".toCharArray());
 
         System.out.println("Eco 2");
