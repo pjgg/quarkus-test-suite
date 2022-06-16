@@ -314,14 +314,14 @@ public abstract class BaseJwtSecurityIT {
         if (ks == null) {
             System.out.println("keystore is null");
         } else {
-            System.out.println("KS is not null");
             System.out.println("Provider selected Name " + ks.getProvider().getName());
         }
 
         for (Enumeration<String> e = ks.aliases(); e.hasMoreElements(); ) {
             System.out.println(" - " + e.nextElement());
         }
-        PrivateKey tmp = (PrivateKey) ks.getKey(null, "password".toCharArray());
+
+        PrivateKey tmp = (PrivateKey) ks.getKey("myalias", "password".toCharArray());
         System.out.println("private key is null: " + Objects.isNull(tmp));
         System.out.println("private Alg: " + tmp.getAlgorithm());
         System.out.println("private key Format: " + tmp.getFormat());
