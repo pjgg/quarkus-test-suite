@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -14,11 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.Enumeration;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -302,7 +299,7 @@ public abstract class BaseJwtSecurityIT {
         byte[] encoded = Base64.decodeBase64(privateKeyPEM);
 
 
-        for(int i =0; i< Security.getProviders().length; i++) {
+        for (int i = 0; i < Security.getProviders().length; i++) {
             System.out.println("Provider " + i + " " + Security.getProviders()[i].getName());
         }
 
@@ -314,23 +311,22 @@ public abstract class BaseJwtSecurityIT {
         ks.load(null, "password".toCharArray());
 
         System.out.println("Eco 2*");
-        if(ks == null) {
+        if (ks == null) {
             System.out.println("keystore is null");
         } else {
             System.out.println("KS is not null");
             System.out.println("Provider selected Name " + ks.getProvider().getName());
         }
 
-        if(Objects.nonNull(ks.aliases())) {
-            Iterator<String> alias = ks.aliases().asIterator();
-            System.out.println("Alias hasNext? " + alias.hasNext());
-            while (alias.hasNext()) {
-                System.out.println("Alias " + alias.next());
-            }
+        for (Enumeration<String> e = ks.aliases(); e.hasMoreElements(); ) {
+            System.out.println(" - " + e.nextElement());
         }
+        PrivateKey tmp = (PrivateKey) ks.getKey("pablo-test-certificate", "password".toCharArray());
+        System.out.println("private key is null: " + Objects.isNull(tmp));
+        System.out.println("private Alg: " + tmp.getAlgorithm());
+        System.out.println("private key Format: " + tmp.getFormat());
 
-
-        return (PrivateKey) ks.getKey("selfsigned", "password".toCharArray());
+        return tmp;
     }
 
     private enum Invalidity {
