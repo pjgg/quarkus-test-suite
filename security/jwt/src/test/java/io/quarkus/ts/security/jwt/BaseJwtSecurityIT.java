@@ -323,11 +323,10 @@ public abstract class BaseJwtSecurityIT {
 
         if(Objects.nonNull(ks.aliases())) {
             Iterator<String> alias = ks.aliases().asIterator();
+            System.out.println("Alias hasNext? " + alias.hasNext());
             while (alias.hasNext()) {
                 System.out.println("Alias " + alias.next());
             }
-        } else {
-            System.out.println("alias null");
         }
 
 
