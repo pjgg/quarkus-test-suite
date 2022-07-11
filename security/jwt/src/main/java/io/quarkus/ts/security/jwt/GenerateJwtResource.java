@@ -4,6 +4,8 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.Security;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
@@ -68,6 +70,10 @@ public class GenerateJwtResource {
 
         if (!Objects.isNull(privateKey)) {
             return jwtbuilder.jws().sign(privateKey);
+        }
+
+        for (Provider p : Security.getProviders()) {
+            System.out.println(p.getName());
         }
 
         return jwtbuilder.sign();
