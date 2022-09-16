@@ -74,7 +74,8 @@ public class OpenShiftHelmSimpleAppIT {
     private static void installChart(String chartName) {
         String chartFolderName = helmClient.getWorkingDirectory().getAbsolutePath() + "/helm/" + PLATFORM_OPENSHIFT + "/"
                 + chartName;
-        helmClient.run("dependency", "update", chartFolderName);
+        helmClient.run("dependency", "--namespace", ocpClient.project(), "update", chartFolderName);
+        helmClient.run("dependency", "--namespace", ocpClient.project(), "build", chartFolderName);
         QuarkusHelmClient.Result chartResultCmd = helmClient.installChart(chartName, chartFolderName);
         thenSucceed(chartResultCmd);
 
