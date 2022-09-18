@@ -395,6 +395,7 @@
                 <module>cache/caffeine</module>
                 <module>qute/multimodule</module>
                 <module>helm/helm-minimum</module>
+                <module>helm/helm-advanced</module>
             </modules>
         </profile>
         <profile>

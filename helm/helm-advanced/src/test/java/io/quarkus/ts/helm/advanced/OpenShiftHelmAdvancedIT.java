@@ -1,14 +1,10 @@
-package io.quarkus.ts.helm.minimum;
+package io.quarkus.ts.helm.advanced;
 
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItemInArray;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -26,11 +22,12 @@ import io.restassured.RestAssured;
 @OpenShiftScenario
 // Helm is concerned just about image name, Native compilation is not relevant
 @DisabledOnNative
-public class OpenShiftHelmSimpleAppIT {
+public class OpenShiftHelmAdvancedIT {
 
+    private static final int EXPECTED_SIZE = 7;
     private static final String PLATFORM_OPENSHIFT = "openshift";
     private static final String CHART_NAME = "my-chart";
-    private static final String APP_SERVICE_NAME = "helm-minimum";
+    private static final String APP_SERVICE_NAME = "ts-quarkus-helm-advanced-app";
     private static final int TIMEOUT_MIN = 1;
     private static String APP_URL;
 
@@ -51,27 +48,12 @@ public class OpenShiftHelmSimpleAppIT {
     }
 
     @Test
-    public void deployHelmQuarkusApplication() {
-        assertThat(getAvailableChartNames().toArray(), hasItemInArray(CHART_NAME));
-        RestAssured.given().baseUri(APP_URL).get("/greeting")
-                .then().statusCode(HttpStatus.SC_OK)
-                .body(is("Hello Helm!"));
-    }
-
-    @Test
-    public void customReadiness() {
-        RestAssured.given().baseUri(APP_URL).get("/q/health/ready")
-                .then().statusCode(HttpStatus.SC_OK)
-                .body("checks[0].name", is("Hello custom Helm Readiness!"));
-    }
-
-    private List<String> getAvailableChartNames() {
-        List<QuarkusHelmClient.ChartListResult> charts = helmClient.getCharts();
-        assertTrue(charts.size() > 0, "Chart " + CHART_NAME + " not found. Installation fail");
-        return charts.stream()
-                .map(QuarkusHelmClient.ChartListResult::getName)
-                .map(String::trim)
-                .collect(Collectors.toList());
+    public void getAll() {
+        RestAssured.given().baseUri(APP_URL)
+                .get("/book")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+                .body("", hasSize(EXPECTED_SIZE));
     }
 
     private static void installChart(String chartName) {

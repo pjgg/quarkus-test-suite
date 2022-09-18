@@ -1,0 +1,28 @@
+postgresql:
+  image:
+    registry: docker.io
+    tag: "13.6"
+    repository: library/postgres
+  global:
+    postgresql:
+      auth:
+        database: mydb
+        password: secret
+        postgresPassword: secret
+        username: user
+  primary:
+    podSecurityContext:
+      enabled: false
+      fsGroup: ""
+    containerSecurityContext:
+      enabled: false
+      runAsUser: ""
+    securityContext:
+      enabled: false
+    volumePermissions:
+      securityContext:
+        runAsUser: "auto"
+      enabled: false
+    shmVolume:
+      chmod:
+        enabled: false
