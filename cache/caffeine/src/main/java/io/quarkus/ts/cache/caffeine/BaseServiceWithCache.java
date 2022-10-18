@@ -4,6 +4,7 @@ import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheInvalidateAll;
 import io.quarkus.cache.CacheKey;
 import io.quarkus.cache.CacheResult;
+import io.vertx.ext.web.handler.sockjs.impl.StringEscapeUtils;
 
 public abstract class BaseServiceWithCache {
 
@@ -22,8 +23,8 @@ public abstract class BaseServiceWithCache {
     }
 
     @CacheResult(cacheName = CACHE_NAME)
-    public String getValueWithPrefix(@CacheKey String prefix) {
-        return prefix + ": " + counter++;
+    public String getValueWithPrefix(@CacheKey String prefix) throws Exception {
+        return StringEscapeUtils.escapeJava(prefix) + ": " + counter++;
     }
 
     @CacheInvalidate(cacheName = CACHE_NAME)

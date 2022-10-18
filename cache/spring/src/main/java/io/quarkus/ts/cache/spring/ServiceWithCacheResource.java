@@ -42,7 +42,7 @@ public class ServiceWithCacheResource {
 
     @GetMapping("/{service}/using-prefix/{prefix}")
     public String getValueUsingPrefixFromService(@PathVariable("service") String service,
-            @PathVariable("prefix") String prefix) {
+            @PathVariable("prefix") String prefix) throws Exception {
         return lookupServiceByPathParam(service).getValueWithPrefix(prefix);
     }
 

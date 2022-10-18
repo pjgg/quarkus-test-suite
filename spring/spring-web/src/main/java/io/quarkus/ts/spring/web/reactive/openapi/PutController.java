@@ -6,13 +6,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.vertx.ext.web.handler.sockjs.impl.StringEscapeUtils;
+
 @RestController
 @RequestMapping(value = "/put")
 public class PutController {
 
     @PutMapping(value = "/no-type")
-    public String postNoType(@RequestBody String body) {
-        return body;
+    public String postNoType(@RequestBody String body) throws Exception {
+        return StringEscapeUtils.escapeJava(body);
     }
 
     @PutMapping(value = "/text-plain", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)

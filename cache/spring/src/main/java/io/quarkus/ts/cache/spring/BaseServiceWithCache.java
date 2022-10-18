@@ -4,6 +4,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
+import io.vertx.ext.web.handler.sockjs.impl.StringEscapeUtils;
+
 public abstract class BaseServiceWithCache {
 
     public static final String DEFAULT_CACHE_VALUE = "reset";
@@ -22,8 +24,8 @@ public abstract class BaseServiceWithCache {
     }
 
     @Cacheable(CACHE_NAME)
-    public String getValueWithPrefix(String prefix) {
-        return prefix + ": " + counter++;
+    public String getValueWithPrefix(String prefix) throws Exception {
+        return StringEscapeUtils.escapeJava(prefix) + ": " + counter++;
     }
 
     @CacheEvict(CACHE_NAME)

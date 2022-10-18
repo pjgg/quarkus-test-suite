@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.vertx.ext.web.handler.sockjs.impl.StringEscapeUtils;
+
 @RestController
 @RequestMapping("/api")
 public class RestControllerWithCacheResource {
@@ -37,8 +39,8 @@ public class RestControllerWithCacheResource {
 
     @GetMapping("/using-prefix/{prefix}")
     @Cacheable(CACHE_NAME)
-    public String getValueWithPrefix(@PathVariable("prefix") String prefix) {
-        return prefix + ": " + counter++;
+    public String getValueWithPrefix(@PathVariable("prefix") String prefix) throws Exception {
+        return StringEscapeUtils.escapeJava(prefix) + ": " + counter++;
     }
 
     @PostMapping("/using-prefix/{prefix}/invalidate-cache")
