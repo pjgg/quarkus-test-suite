@@ -1,0 +1,57 @@
+{
+  "realm": "test-mutual-tls-realm",
+  "enabled": true,
+  "sslRequired": "all",
+  "accessTokenLifespan": 10000,
+  "ssoSessionMaxLifespan": 10000,
+  "roles": {
+    "realm": [
+      {
+        "name": "user"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "test-normal-user",
+      "enabled": true,
+      "email": "test-normal-user@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test-normal-user"
+        }
+      ],
+      "clientRoles": {
+        "test-mutual-tls": [
+          "uma_protection"
+        ]
+      },
+      "realmRoles": [
+        "user",
+        "uma_protection"
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "test-mutual-tls",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "test-mutual-tls-secret",
+      "serviceAccountsEnabled": true,
+      "authorizationSettings": {
+        "scopes": [
+          {
+            "id": "uma_authorization",
+            "name": "uma_authorization"
+          }
+        ]
+      }
+    }
+  ]
+}
