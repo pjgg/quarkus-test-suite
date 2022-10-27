@@ -30,6 +30,7 @@
         <checkstyle.version>10.3.4</checkstyle.version>
         <jjwt.version>0.11.5</jjwt.version>
         <jsoup.version>1.15.3</jsoup.version>
+        <wiremock.version>2.34.0</wiremock.version>
         <camel-quarkus-bom.version>2.13.0</camel-quarkus-bom.version>
         <!-- TODO: https://github.com/quarkiverse/quarkus-helm/issues/114-->
         <!-- <quarkus-helm.version>0.1.1</quarkus-helm.version> -->
@@ -121,6 +122,12 @@
                 <artifactId>assertj-core</artifactId>
                 <scope>test</scope>
                 <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock-jre8</artifactId>
+                <scope>test</scope>
+                <version>${wiremock.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
