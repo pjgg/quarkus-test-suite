@@ -15,6 +15,8 @@ public abstract class BaseResteasyIT {
     public static final String CLASSIC = "/classic";
     public static final String ENDPOINT_WITH_NO_PRODUCES = "/validate-no-produces/boom";
     public static final String ENDPOINT_WITH_MULTIPLE_PRODUCES = "/validate-multiple-produces/boom";
+    public static final String ENDPOINT_NATIVE_HIBERNATE_VALIDATOR = "/validate-native-compilation";
+    public static final String CLASSIC_ENDPOINT_NATIVE_HIBERNATE_VALIDATOR = CLASSIC + ENDPOINT_NATIVE_HIBERNATE_VALIDATOR;
     public static final String CLASSIC_ENDPOINT_WITH_NO_PRODUCES = CLASSIC + ENDPOINT_WITH_NO_PRODUCES;
     public static final String CLASSIC_ENDPOINT_WITH_MULTIPLE_PRODUCES = CLASSIC + ENDPOINT_WITH_MULTIPLE_PRODUCES;
     public static final String REACTIVE_ENDPOINT_WITH_NO_PRODUCES = REACTIVE + ENDPOINT_WITH_NO_PRODUCES;
@@ -24,6 +26,10 @@ public abstract class BaseResteasyIT {
 
     protected static ResponseValidator validate(String path) {
         return BaseResteasyIT.validate(given().get(path));
+    }
+
+    protected static ResponseValidator validateWithBody(String path, Object body) {
+        return BaseResteasyIT.validate(given().body(body).contentType(ContentType.JSON).post(path));
     }
 
     protected static ResponseValidator validate(Response response) {
@@ -39,6 +45,11 @@ public abstract class BaseResteasyIT {
 
         protected ResponseValidator isBadRequest() {
             assertEquals(HttpStatus.SC_BAD_REQUEST, response.statusCode());
+            return this;
+        }
+
+        protected ResponseValidator isOkRequest() {
+            assertEquals(HttpStatus.SC_OK, response.statusCode());
             return this;
         }
 
